@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Media Library — Live Demo</title>
+    <meta name="description" content="A beautiful media browser modal for jQuery file uploaders. Browse, search, and select previously uploaded files without re-uploading.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #4f46e5; --primary-light: #818cf8; }
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+
+        .hero { text-align: center; padding: 60px 20px 40px; }
+        .hero h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
+        .hero h1 span { background: linear-gradient(135deg, var(--primary-light), #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { color: #94a3b8; font-size: 1.1rem; max-width: 600px; margin: 0 auto 24px; }
+        .hero .badges img { margin: 0 4px; }
+
+        .demo-section { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+        .demo-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+        .demo-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+        .demo-card p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px; }
+
+        .result-box { background: #0f172a; border: 1px dashed #334155; border-radius: 8px; padding: 16px; margin-top: 12px; min-height: 60px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .result-box .placeholder-text { color: #475569; font-size: 0.85rem; }
+        .result-item { text-align: center; }
+        .result-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #334155; }
+        .result-item small { display: block; color: #94a3b8; font-size: 10px; margin-top: 4px; max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .code-block { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-top: 16px; position: relative; }
+        .code-block pre { margin: 0; color: #e2e8f0; font-size: 13px; overflow-x: auto; }
+        .code-block .lang { position: absolute; top: 8px; right: 12px; font-size: 10px; color: #475569; text-transform: uppercase; }
+
+        .btn-demo { padding: 10px 24px; font-weight: 600; border-radius: 8px; }
+        .btn-primary { background: var(--primary); border-color: var(--primary); }
+        .btn-primary:hover { background: #4338ca; border-color: #4338ca; }
+        .btn-outline-light:hover { background: rgba(255,255,255,0.1); }
+
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 40px 0; }
+        .feature { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 20px; }
+        .feature i { font-size: 1.5rem; color: var(--primary-light); margin-bottom: 8px; display: block; }
+        .feature h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .feature p { color: #94a3b8; font-size: 0.82rem; margin: 0; }
+
+        .footer { text-align: center; padding: 40px 20px; color: #475569; font-size: 0.85rem; border-top: 1px solid #1e293b; }
+        .footer a { color: var(--primary-light); text-decoration: none; }
+
+        @media(max-width: 576px) {
+            .hero h1 { font-size: 1.8rem; }
+            .features { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+    <h1><i class="bi bi-images"></i> jQuery <span>Media Library</span></h1>
+    <p>A beautiful media browser modal for jQuery file uploaders. Browse, search, and reuse previously uploaded files — without re-uploading.</p>
+    <div class="badges mb-3">
+        <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT">
+        <img src="https://img.shields.io/badge/jQuery-3.0%2B-blue?logo=jquery" alt="jQuery">
+        <img src="https://img.shields.io/badge/Bootstrap-5.x-purple?logo=bootstrap" alt="Bootstrap 5">
+        <img src="https://img.shields.io/badge/size-~10KB_min-brightgreen" alt="10KB">
+    </div>
+    <a href="https://github.com/raca12/jquery-media-library" class="btn btn-primary btn-demo me-2">
+        <i class="bi bi-github me-1"></i> View on GitHub
+    </a>
+    <a href="#demos" class="btn btn-outline-light btn-demo">
+        <i class="bi bi-play-circle me-1"></i> Try Demo
+    </a>
+</div>
+
+<!-- Features -->
+<div class="demo-section">
+    <div class="features">
+        <div class="feature">
+            <i class="bi bi-grid-3x3-gap"></i>
+            <h4>Responsive Grid</h4>
+            <p>Beautiful thumbnail grid that adapts from 6 columns on desktop to 2 on mobile. Lazy-loaded images.</p>
+        </div>
+        <div class="feature">
+            <i class="bi bi-search"></i>
+            <h4>Search & Filter</h4>
+            <p>Search by filename with 300ms debounce. Filter by folder tabs. Paginated results.</p>
+        </div>
+        <div class="feature">
+            <i class="bi bi-check2-square"></i>
+            <h4>Single or Multi-Select</h4>
+            <p>Toggle between single and multiple file selection with one option.</p>
+        </div>
+        <div class="feature">
+            <i class="bi bi-plug"></i>
+            <h4>Auto Uploader Hook</h4>
+            <p>Automatically adds a "Media Library" button to any jQuery file uploader. Zero config.</p>
+        </div>
+        <div class="feature">
+            <i class="bi bi-code-slash"></i>
+            <h4>Backend Agnostic</h4>
+            <p>Works with PHP, Node.js, Python, Go — anything that returns JSON. Examples included.</p>
+        </div>
+        <div class="feature">
+            <i class="bi bi-feather"></i>
+            <h4>~10KB Minified</h4>
+            <p>Single JS file with CSS injected. No extra dependencies beyond jQuery + Bootstrap 5.</p>
+        </div>
+    </div>
+
+    <!-- Demos -->
+    <div id="demos">
+        <!-- Demo 1: Single Select -->
+        <div class="demo-card">
+            <h3><i class="bi bi-image me-1 text-primary"></i> Single File Select</h3>
+            <p>Click the button to open the modal and select one file.</p>
+            <button class="btn btn-primary btn-sm" id="btnSingle">
+                <i class="bi bi-image me-1"></i> Choose Image
+            </button>
+            <div class="result-box" id="resultSingle">
+                <span class="placeholder-text">No file selected — click the button above</span>
+            </div>
+            <div class="code-block">
+                <span class="lang">js</span>
+                <pre>MediaLibrary.open({
+    onSelect: function (files) {
+        console.log('Selected:', files[0].url);
+    }
+});</pre>
+            </div>
+        </div>
+
+        <!-- Demo 2: Multi Select -->
+        <div class="demo-card">
+            <h3><i class="bi bi-images me-1 text-success"></i> Multiple File Select</h3>
+            <p>Select multiple files at once. Click files to toggle selection.</p>
+            <button class="btn btn-success btn-sm" id="btnMulti">
+                <i class="bi bi-images me-1"></i> Choose Multiple Files
+            </button>
+            <div class="result-box" id="resultMulti">
+                <span class="placeholder-text">No files selected</span>
+            </div>
+            <div class="code-block">
+                <span class="lang">js</span>
+                <pre>MediaLibrary.open({
+    multiple: true,
+    onSelect: function (files) {
+        // files = [{ url, name }, { url, name }, ...]
+        files.forEach(f => console.log(f.url));
+    }
+});</pre>
+            </div>
+        </div>
+
+        <!-- Demo 3: Folder Filter -->
+        <div class="demo-card">
+            <h3><i class="bi bi-folder me-1 text-warning"></i> Pre-filtered by Folder</h3>
+            <p>Open the modal with a specific folder pre-selected.</p>
+            <button class="btn btn-warning btn-sm text-dark" id="btnFolder">
+                <i class="bi bi-folder me-1"></i> Browse "products" Folder
+            </button>
+            <div class="result-box" id="resultFolder">
+                <span class="placeholder-text">No file selected</span>
+            </div>
+            <div class="code-block">
+                <span class="lang">js</span>
+                <pre>MediaLibrary.open({
+    folder: 'products',
+    onSelect: function (files) {
+        console.log(files[0].url);
+    }
+});</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Start -->
+    <div class="demo-card" style="margin-top: 40px;">
+        <h3><i class="bi bi-lightning me-1 text-warning"></i> Quick Start — 3 Lines of Code</h3>
+        <div class="code-block">
+            <span class="lang">html</span>
+            <pre>&lt;!-- 1. Add after jQuery + Bootstrap --&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/jquery-media-library/dist/media-library.min.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+// 2. Set your API endpoint
+MediaLibrary.defaults.apiUrl = '/api/media-list';
+
+// 3. Open the modal
+$('#btn').on('click', function () {
+    MediaLibrary.open({
+        multiple: true,
+        onSelect: function (files) {
+            console.log(files);
+        }
+    });
+});
+&lt;/script&gt;</pre>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>
+        <a href="https://github.com/raca12/jquery-media-library"><i class="bi bi-github"></i> GitHub</a>
+        &nbsp;&middot;&nbsp;
+        MIT License
+        &nbsp;&middot;&nbsp;
+        Made with care
+    </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/raca12/jquery-media-library@main/dist/media-library.min.js"></script>
+
+<script>
+// ── Mock Data (demo only — in production this comes from your backend) ──
+var MOCK_FILES = [];
+var MOCK_FOLDERS = ['products', 'avatars', 'banners', 'documents'];
+var sampleImages = [
+    { name: 'sunset-landscape.jpg', folder: 'banners' },
+    { name: 'product-headphones.jpg', folder: 'products' },
+    { name: 'team-photo.jpg', folder: 'avatars' },
+    { name: 'hero-banner.png', folder: 'banners' },
+    { name: 'product-laptop.jpg', folder: 'products' },
+    { name: 'avatar-sarah.jpg', folder: 'avatars' },
+    { name: 'product-watch.jpg', folder: 'products' },
+    { name: 'company-logo.png', folder: 'banners' },
+    { name: 'avatar-john.jpg', folder: 'avatars' },
+    { name: 'product-camera.jpg', folder: 'products' },
+    { name: 'background-abstract.jpg', folder: 'banners' },
+    { name: 'product-shoes.jpg', folder: 'products' },
+    { name: 'avatar-emma.jpg', folder: 'avatars' },
+    { name: 'product-bag.jpg', folder: 'products' },
+    { name: 'newsletter-header.png', folder: 'banners' },
+    { name: 'product-phone.jpg', folder: 'products' },
+    { name: 'report-q4.pdf', folder: 'documents' },
+    { name: 'invoice-2026.pdf', folder: 'documents' },
+    { name: 'product-tablet.jpg', folder: 'products' },
+    { name: 'avatar-mike.jpg', folder: 'avatars' },
+    { name: 'product-keyboard.jpg', folder: 'products' },
+    { name: 'brochure.pdf', folder: 'documents' },
+    { name: 'social-banner.jpg', folder: 'banners' },
+    { name: 'product-mouse.jpg', folder: 'products' },
+    { name: 'presentation.pptx', folder: 'documents' },
+    { name: 'product-monitor.jpg', folder: 'products' },
+    { name: 'avatar-lisa.jpg', folder: 'avatars' },
+    { name: 'product-earbuds.jpg', folder: 'products' },
+    { name: 'spreadsheet.xlsx', folder: 'documents' },
+    { name: 'product-charger.jpg', folder: 'products' },
+    { name: 'product-case.jpg', folder: 'products' },
+    { name: 'avatar-alex.jpg', folder: 'avatars' },
+    { name: 'product-stand.jpg', folder: 'products' },
+    { name: 'product-cable.jpg', folder: 'products' },
+    { name: 'terms-of-service.pdf', folder: 'documents' },
+    { name: 'product-adapter.jpg', folder: 'products' },
+    { name: 'banner-sale.png', folder: 'banners' },
+    { name: 'banner-holiday.jpg', folder: 'banners' },
+    { name: 'avatar-tom.jpg', folder: 'avatars' },
+    { name: 'product-speaker.jpg', folder: 'products' },
+    { name: 'manual.pdf', folder: 'documents' },
+    { name: 'product-lens.jpg', folder: 'products' },
+    { name: 'product-tripod.jpg', folder: 'products' },
+    { name: 'avatar-nina.jpg', folder: 'avatars' },
+    { name: 'product-filter.jpg', folder: 'products' },
+    { name: 'product-strap.jpg', folder: 'products' },
+    { name: 'banner-new-arrivals.jpg', folder: 'banners' },
+    { name: 'product-cleaner.jpg', folder: 'products' },
+];
+
+// Generate mock files with placeholder images
+sampleImages.forEach(function(item, i) {
+    var ext = item.name.split('.').pop().toLowerCase();
+    var isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].indexOf(ext) >= 0;
+    var colors = ['4f46e5','06b6d4','10b981','f59e0b','ef4444','8b5cf6','ec4899','14b8a6'];
+    var color = colors[i % colors.length];
+    var url = isImage
+        ? 'https://placehold.co/300x200/' + color + '/ffffff?text=' + encodeURIComponent(item.name.split('.')[0].substring(0, 12))
+        : '/docs/' + item.name;
+
+    MOCK_FILES.push({
+        url: url,
+        name: item.name,
+        type: isImage ? 'image' : 'document',
+        size: Math.floor(Math.random() * 2000000) + 50000,
+        modified: '2026-02-' + String(Math.floor(Math.random() * 20) + 1).padStart(2, '0'),
+        folder: item.folder
+    });
+});
+
+// Mock API — intercept AJAX calls
+$.ajaxPrefilter(function(options) {
+    if (options.url && options.url.indexOf('media-list') !== -1) {
+        var params = {};
+        if (options.data) {
+            if (typeof options.data === 'string') {
+                options.data.split('&').forEach(function(p) {
+                    var kv = p.split('=');
+                    params[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || '');
+                });
+            } else {
+                params = options.data;
+            }
+        }
+
+        var folder = params.folder || '';
+        var search = (params.search || '').toLowerCase();
+        var page = parseInt(params.page) || 1;
+        var perPage = 48;
+
+        var filtered = MOCK_FILES.filter(function(f) {
+            if (folder && f.folder !== folder) return false;
+            if (search && f.name.toLowerCase().indexOf(search) === -1) return false;
+            return true;
+        });
+
+        var total = filtered.length;
+        var pages = Math.max(1, Math.ceil(total / perPage));
+        page = Math.min(page, pages);
+        var offset = (page - 1) * perPage;
+        var paged = filtered.slice(offset, offset + perPage).map(function(f) {
+            var copy = $.extend({}, f);
+            delete copy.folder;
+            return copy;
+        });
+
+        // Simulate network delay
+        setTimeout(function() {
+            if (options.success) {
+                options.success({
+                    files: paged,
+                    folders: MOCK_FOLDERS,
+                    current_folder: folder,
+                    total: total,
+                    page: page,
+                    pages: pages
+                });
+            }
+            if (options.complete) {
+                options.complete({ status: 200 }, 'success');
+            }
+        }, 200);
+
+        // Prevent actual AJAX
+        options.url = 'about:blank';
+        options.beforeSend = function() { return false; };
+    }
+});
+
+// Configure
+MediaLibrary.defaults.apiUrl = '/api/media-list';
+
+// Demo 1: Single
+$('#btnSingle').on('click', function() {
+    MediaLibrary.open({
+        onSelect: function(files) {
+            var f = files[0];
+            var isImg = f.url.match(/placehold|jpg|png|gif|webp/i);
+            var html = isImg
+                ? '<div class="result-item"><img src="' + f.url + '" alt=""><small>' + f.name + '</small></div>'
+                : '<div class="result-item"><i class="bi bi-file-earmark" style="font-size:2.5rem;color:#94a3b8"></i><small>' + f.name + '</small></div>';
+            $('#resultSingle').html(html);
+        }
+    });
+});
+
+// Demo 2: Multi
+$('#btnMulti').on('click', function() {
+    MediaLibrary.open({
+        multiple: true,
+        onSelect: function(files) {
+            var html = files.map(function(f) {
+                var isImg = f.url.match(/placehold|jpg|png|gif|webp/i);
+                return '<div class="result-item">' +
+                    (isImg ? '<img src="' + f.url + '" alt="">' : '<i class="bi bi-file-earmark" style="font-size:2.5rem;color:#94a3b8"></i>') +
+                    '<small>' + f.name + '</small></div>';
+            }).join('');
+            $('#resultMulti').html(html);
+        }
+    });
+});
+
+// Demo 3: Folder
+$('#btnFolder').on('click', function() {
+    MediaLibrary.open({
+        folder: 'products',
+        onSelect: function(files) {
+            var f = files[0];
+            var isImg = f.url.match(/placehold|jpg|png|gif|webp/i);
+            var html = isImg
+                ? '<div class="result-item"><img src="' + f.url + '" alt=""><small>' + f.name + '</small></div>'
+                : '<div class="result-item"><i class="bi bi-file-earmark" style="font-size:2.5rem;color:#94a3b8"></i><small>' + f.name + '</small></div>';
+            $('#resultFolder').html(html);
+        }
+    });
+});
+</script>
+
+</body>
+</html>
