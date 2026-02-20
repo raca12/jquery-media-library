@@ -1,0 +1,41 @@
+{
+  "name": "jquery-media-library",
+  "version": "1.0.0",
+  "description": "A beautiful media browser modal for jQuery. Browse, search, and select previously uploaded files without re-uploading.",
+  "main": "dist/media-library.min.js",
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "scripts": {
+    "build": "npx terser src/media-library.js -o dist/media-library.min.js --comments '/^!/' -c -m"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raca12/jquery-media-library.git"
+  },
+  "keywords": [
+    "jquery",
+    "media-library",
+    "file-browser",
+    "file-picker",
+    "image-picker",
+    "upload",
+    "modal",
+    "bootstrap",
+    "media-manager",
+    "file-manager",
+    "gallery",
+    "asset-browser"
+  ],
+  "author": "raca12 (https://github.com/raca12)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/raca12/jquery-media-library/issues"
+  },
+  "homepage": "https://github.com/raca12/jquery-media-library#readme",
+  "peerDependencies": {
+    "jquery": ">=3.0.0",
+    "bootstrap": ">=5.0.0"
+  }
+}

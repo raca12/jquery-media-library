@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Media Library — Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; padding: 40px 20px; }
+        .demo-card { max-width: 700px; margin: 0 auto; }
+        .result-box { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; margin-top: 16px; min-height: 60px; }
+        .result-img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+
+<div class="demo-card">
+    <h2 class="mb-1"><i class="bi bi-images text-primary"></i> jQuery Media Library</h2>
+    <p class="text-muted">Browse and select previously uploaded files from a beautiful modal.</p>
+
+    <hr>
+
+    <!-- Demo 1: Single Select -->
+    <h5>Single File Select</h5>
+    <button class="btn btn-primary" id="btnSingle">
+        <i class="bi bi-image me-1"></i> Choose Image
+    </button>
+    <div class="result-box" id="resultSingle">
+        <span class="text-muted">No file selected</span>
+    </div>
+
+    <hr>
+
+    <!-- Demo 2: Multiple Select -->
+    <h5>Multiple File Select</h5>
+    <button class="btn btn-success" id="btnMulti">
+        <i class="bi bi-images me-1"></i> Choose Files
+    </button>
+    <div class="result-box" id="resultMulti">
+        <span class="text-muted">No files selected</span>
+    </div>
+
+    <hr>
+
+    <!-- Demo 3: With Folder Filter -->
+    <h5>Pre-filtered by Folder</h5>
+    <button class="btn btn-outline-primary" id="btnFolder">
+        <i class="bi bi-folder me-1"></i> Browse "products" Folder
+    </button>
+    <div class="result-box" id="resultFolder">
+        <span class="text-muted">No file selected</span>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../dist/media-library.min.js"></script>
+
+<script>
+// Configure the API endpoint
+MediaLibrary.defaults.apiUrl = '/api/media-list';
+
+// Demo 1: Single select
+$('#btnSingle').on('click', function () {
+    MediaLibrary.open({
+        onSelect: function (files) {
+            var f = files[0];
+            var html = f.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)
+                ? '<img src="' + f.url + '" class="result-img me-2"> '
+                : '<i class="bi bi-file-earmark fs-1 me-2"></i> ';
+            $('#resultSingle').html(html + '<code>' + f.url + '</code>');
+        }
+    });
+});
+
+// Demo 2: Multiple select
+$('#btnMulti').on('click', function () {
+    MediaLibrary.open({
+        multiple: true,
+        onSelect: function (files) {
+            var html = files.map(function (f) {
+                return '<div class="d-inline-block text-center me-2 mb-2">' +
+                    (f.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)
+                        ? '<img src="' + f.url + '" class="result-img"><br>'
+                        : '<i class="bi bi-file-earmark" style="font-size:3rem"></i><br>') +
+                    '<small class="text-muted">' + f.name + '</small></div>';
+            }).join('');
+            $('#resultMulti').html(html);
+        }
+    });
+});
+
+// Demo 3: Pre-filtered folder
+$('#btnFolder').on('click', function () {
+    MediaLibrary.open({
+        folder: 'products',
+        onSelect: function (files) {
+            $('#resultFolder').html('<code>' + files[0].url + '</code>');
+        }
+    });
+});
+</script>
+
+</body>
+</html>
